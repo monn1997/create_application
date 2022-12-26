@@ -11,12 +11,16 @@ class PostsController < ApplicationController
 
    def create
      @post = Post.new(post_params)
-     if @post.save
+     if params[:back]
+        render :new
+     else
+        if @post.save
       # 一覧画面へ遷移して"ブログを作成しました！"とメッセージを表示します。
       redirect_to posts_path, notice: "投稿を作成しました！"
-     else
+        else
       # 入力フォームを再描画します。
       render :new
+        end
      end
     end 
 
@@ -41,6 +45,11 @@ class PostsController < ApplicationController
     @post.destroy
     redirect_to posts_path, notice:"投稿を削除しました！"
    end
+
+   def confirm
+    @post = Post.new(post_params)
+    render :new if @post.invalid?
+  end
 
    private
 
